@@ -3,8 +3,8 @@ const express = require('express')
 const sequelize = require('sequelize')
 const dotenv = require('dotenv').config()
 const cookieParser = require('cookie-parser')
-const db = require('./app/models')
-const userRoutes = require ('./app/routes/user.routes')
+const db = require('./models')
+const userRoutes = require ('./routes/user.routes')
  
 
 //setting up your port
