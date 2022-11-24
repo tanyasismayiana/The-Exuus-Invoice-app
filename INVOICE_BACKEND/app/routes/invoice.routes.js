@@ -1,8 +1,9 @@
 //importing modules
 const express = require('express')
 const invoiceController = require('../controllers/invoice.controller')
-const { createInvoice, getAllInvoice } = invoiceController
+const { createInvoice, getAllInvoice, updateInvoice } = invoiceController
 const { body } = require("express-validator");
+const { isAuth } = require('../middlewares/user.auth');
 
 const router = express.Router()
 
@@ -10,7 +11,15 @@ const router = express.Router()
 // create invoice
 const createInvoiceRule = [
     body("title").notEmpty().withMessage("Title is required"),
-    body("status").notEmpty().withMessage("Status is required"),
+    body("status").notEmpty().withMessage("Status is required").custom((value)=>{
+      const status = ['paid', 'outstanding', 'late'];
+
+      if(!status.includes(value.toLowerCase())){
+         return Promise.reject(`Status should be either ${status.join(',')} `)
+      }
+
+      return true;
+    }),
     body("hoursOfWork")
       .notEmpty()
       .withMessage("HoursOfWork is required")
@@ -22,8 +31,10 @@ const createInvoiceRule = [
       .isNumeric()
       .withMessage("Rate must be a number"),
   ];
-  route.post("/", isAuth, createInvoiceRule, createInvoice);
-  route.get("/", isAuth, getAllInvoice);
+
+  router.post("/", isAuth ,createInvoiceRule, createInvoice);
+  router.put("/:invoiceId", isAuth ,createInvoiceRule, updateInvoice);
+  router.get("/", isAuth , getAllInvoice);
   
   module.exports = router;
   

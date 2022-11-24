@@ -4,7 +4,8 @@ const sequelize = require('sequelize')
 const dotenv = require('dotenv').config()
 const cookieParser = require('cookie-parser')
 const db = require('./app/models')
-const userRoutes = require ('./app/routes/user.routes')
+const userRoutes = require ('./app/routes/user.routes');
+const invoiceRoutes = require('./app/routes/invoice.routes');
  
 
 //setting up your port
@@ -19,12 +20,13 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 
 //synchronizing the database and forcing it to false so we dont lose data
-db.sequelize.sync({ force: true }).then(() => {
+db.sequelize.sync({ alter: true }).then(() => {
     console.log("db has been re sync")
 })
 
 //routes for the user API
-app.use('/api/users', userRoutes)
+app.use('/api/users', userRoutes);
+app.use('/api/invoice', invoiceRoutes)
 
 //listening to server connection
 app.listen(PORT, () => console.log(`Server is connected on ${PORT}`))

@@ -1,5 +1,3 @@
-// invoice model
-
 module.exports = (sequelize, DataTypes) => {
     const Invoice = sequelize.define(
       "Invoice",
@@ -31,9 +29,10 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       { tableName: "invoice", timestamps: true }
-    )
+    );
     return Invoice
     }
     
-    Invoice.belongsTo(User, { foreignKey: "owner" });
-    User.hasMany(Invoice);
+
+
+    
