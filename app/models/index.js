@@ -20,6 +20,7 @@ db.sequelize = sequelize
 
 //connecting to model
 db.invoices = require('./user.model') (sequelize, DataTypes)
+//db.invoices = require('./invoice.model')(sequelize, DataTypes)
 
 //exporting the module
 module.exports = db
