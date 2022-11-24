@@ -1,6 +1,7 @@
 //importing modules
 const express = require("express");
 const db = require("../models");
+const jwt = require("jsonwebtoken");
 //Assigning db.users to User variable
  const User = db.users;
 
@@ -31,13 +32,40 @@ const db = require("../models");
      return res.json(409).send("Authentication failed");
    }
 
-   next();
+   return next();
  } catch (error) {
-   console.log(error);
+   console.log('ahana',error);
  }
+};
+
+
+
+const isAuth = async (req, res, next) => {
+  try {
+    const token = req.headers["authorization" || "Authorization"];
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized Access" });
+    }
+
+    const verify = jwt.verify(token, process.env.secretKey);
+
+    const findUser = await User.findOne({ where: { id: verify.id } });
+
+    if (!findUser) {
+      return res.status(401).json({ message: "Unauthorized Access" });
+    }
+
+    req.user = findUser;
+
+    return next();
+  } catch (error) {
+    return next(error);
+  }
 };
 
 //exporting module
  module.exports = {
  saveUser,
+ isAuth
 };

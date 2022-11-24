@@ -48,7 +48,8 @@ const login = async (req, res) => {
 const { email, password } = req.body;
 
    //find a user by their email
-   const user = await User.findOne({ email });
+   const user = await User.findOne({ where: {email} });
+   console.log('users', user);
 
    //if user email is found, compare password with bcrypt
    if (user) {
@@ -59,16 +60,14 @@ const { email, password } = req.body;
 
      if (isSame) {
        let token = jwt.sign({ id: user.id }, process.env.secretKey, {
-         expiresIn: 1 * 24 * 60 * 60 * 1000,
+         expiresIn: '2h',
        });
 
        //if password matches wit the one in the database
        //go ahead and generate a cookie for the user
        res.cookie("jwt", token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
-       console.log("user", JSON.stringify(user, null, 2));
-       console.log(token);
        //send user data
-       return res.status(201).send(user);
+       return res.status(200).json({token, data: user});
      } else {
        return res.status(401).send("Authentication failed");
      }
