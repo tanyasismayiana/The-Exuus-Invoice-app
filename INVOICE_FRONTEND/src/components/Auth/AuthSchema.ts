@@ -10,7 +10,7 @@ export const SignupSchema = object().shape({
   password: string()
     .required("Password is required")
     .min(5, "Password should be more than 5 characters"),
-  username: string()
+  userName: string()
     .required("Username is required")
     .min(3, "Username should be more than 3 characters"),
 });
