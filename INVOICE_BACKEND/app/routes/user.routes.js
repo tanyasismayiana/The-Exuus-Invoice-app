@@ -23,7 +23,7 @@ const signupRules = [
   
         return true;
       }),
-    body("username")
+    body("userName")
       .notEmpty({ ignore_whitespace: true })
       .withMessage("Username is required"),
     body("password")
