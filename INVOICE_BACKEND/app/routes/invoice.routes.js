@@ -1,7 +1,7 @@
 //importing modules
 const express = require('express')
 const invoiceController = require('../controllers/invoice.controller')
-const { createInvoice, getAllInvoice, updateInvoice } = invoiceController
+const { createInvoice, getAllInvoice, updateInvoice, deleteInvoice } = invoiceController
 const { body } = require("express-validator");
 const { isAuth } = require('../middlewares/user.auth');
 
@@ -34,6 +34,7 @@ const createInvoiceRule = [
 
   router.post("/", isAuth ,createInvoiceRule, createInvoice);
   router.put("/:invoiceId", isAuth ,createInvoiceRule, updateInvoice);
+  router.delete("/:invoiceId", isAuth, deleteInvoice);
   router.get("/", isAuth , getAllInvoice);
   
   module.exports = router;

@@ -74,8 +74,23 @@ const updateInvoice = async (req, res, next) => {
     return next(error);
   }
 };
+
+const deleteInvoice = async (req, res, next)=>{
+  try {
+    const userId = req.user.id;
+    
+    const invoiceId = req.params.invoiceId;
+
+    await Invoice.destroy({where: {[Op.and]: [{id: invoiceId}, {owner: userId}]}});
+
+    return res.json({message: 'Deleted Successfully'})
+  } catch (error) {
+    return next(error);
+  }
+}
 module.exports = {
   createInvoice,
   getAllInvoice,
-  updateInvoice
+  updateInvoice,
+  deleteInvoice
 };

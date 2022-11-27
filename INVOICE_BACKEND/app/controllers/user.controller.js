@@ -2,16 +2,23 @@
 const bcrypt = require("bcrypt");
 const db = require("../models");
 const jwt = require("jsonwebtoken");
+const { validationResult } = require('express-validator');
 
 // Assigning users to the variable User
 const User = db.users;
 
 //signing a user up
 //hashing users password before its saved to the database with bcrypt
-const signup = async (req, res) => {
+const signup = async (req, res, next) => {
  try {
-   const { userName, email, password } = req.body;
-   const data = {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { userName, email, password } = req.body;
+  const data = {
      userName,
      email,
      password: await bcrypt.hash(password, 10),
@@ -36,20 +43,24 @@ const signup = async (req, res) => {
      return res.status(409).send("Details are not correct");
    }
  } catch (error) {
-   console.log(error);
+  return next(error);
  }
 };
 
 
 //login authentication
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
  try {
+    const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 const { email, password } = req.body;
 
    //find a user by their email
    const user = await User.findOne({ where: {email} });
-   console.log('users', user);
 
    //if user email is found, compare password with bcrypt
    if (user) {
@@ -75,7 +86,7 @@ const { email, password } = req.body;
      return res.status(401).send("Authentication failed");
    }
  } catch (error) {
-   console.log(error);
+   return next(error);
  }
 };
 
