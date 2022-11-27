@@ -4,6 +4,9 @@ const userController = require('../controllers/user.controller')
 const { signup, login } = userController
 const userAuth = require('../middlewares/user.auth');
 const { body } = require('express-validator');
+const db = require('../models');
+
+const User = db.users;
 
 const router = express.Router()
 
